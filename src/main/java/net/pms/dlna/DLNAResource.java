@@ -472,15 +472,15 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 				addChildInternal(child);
 
 				// This is parserV2 transcodable
-				boolean forceTranscodeV2 = true;
+				setStreamableV2(false);
 				boolean parserV2 = child.getMedia() != null && getDefaultRenderer() != null && getDefaultRenderer().isMediaParserV2();
 				if (parserV2) {
 					// We already have useful info, just need to layout folders
 					String mimeType = getDefaultRenderer().getFormatConfiguration().match(child.getMedia());
 					if (mimeType != null) {
 						// This is parserV2 streamable
-						forceTranscodeV2 = false;
 						child.getMedia().setMimeType(mimeType.equals(FormatConfiguration.MIMETYPE_AUTO) ? child.getMedia().getMimeType() : mimeType);
+						setStreamableV2(true);
 					}
 				}
 
@@ -557,7 +557,7 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 						// or 2- ForceTranscode extension forced by user
 						// or 3- FFmpeg support and the file is not ps3 compatible (need to remove this ?) and no SkipTranscode extension forced by user
 						// or 4- There's some sub files or embedded subs to deal with and no SkipTranscode extension forced by user
-						if (forceTranscode || !isSkipTranscode() && (forceTranscodeV2 || isIncompatible || hasSubsToTranscode)) {
+						if (forceTranscode || !isSkipTranscode() && (!isStreamableV2() || isIncompatible || hasSubsToTranscode)) {
 						    child.setPlayer(pl);
 						    LOGGER.trace("Switching " + child.getName() + " to player " + pl.toString() + " for transcoding");
 						}
@@ -2103,6 +2103,36 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 	 */
 	protected void setLastRefreshTime(long lastRefreshTime) {
 		this.lastRefreshTime = lastRefreshTime;
+	}
+	
+	/**
+	 * @deprecated Use standard getter and setter to access this variable.
+	 */
+	@Deprecated
+	protected boolean isStreamableV2 = false;
+	
+	/**
+	 * Returns true if this resource's media info can be handled natively by
+	 * the default renderer.
+	 * 
+	 * @return True if the media can be streamed to the default renderer, false
+	 *  otherwise.
+	 * @since 1.51
+	 */
+	protected boolean isStreamableV2() {
+		return isStreamableV2;
+	}
+	
+	/**
+	 * Set to true if this resource's media info can be handled natively by
+	 * the default renderer.
+	 * 
+	 * @param isStreamableV2 Set to true if the media can be streamed to the
+	 * default renderer, false otherwise.
+	 * @since 1.51
+	 */
+	protected void setStreamableV2(boolean isStreamableV2) {
+		this.isStreamableV2 = isStreamableV2;
 	}
 }
 
