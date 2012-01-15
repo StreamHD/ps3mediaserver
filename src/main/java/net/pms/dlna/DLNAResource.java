@@ -471,17 +471,16 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 				}
 				addChildInternal(child);
 
-				boolean forceTranscodeV2 = false;
+				// This is parserV2 transcodable
+				boolean forceTranscodeV2 = true;
 				boolean parserV2 = child.getMedia() != null && getDefaultRenderer() != null && getDefaultRenderer().isMediaParserV2();
 				if (parserV2) {
 					// We already have useful info, just need to layout folders
 					String mimeType = getDefaultRenderer().getFormatConfiguration().match(child.getMedia());
 					if (mimeType != null) {
-						// This is streamable
+						// This is parserV2 streamable
+						forceTranscodeV2 = false;
 						child.getMedia().setMimeType(mimeType.equals(FormatConfiguration.MIMETYPE_AUTO) ? child.getMedia().getMimeType() : mimeType);
-					} else {
-						// This is transcodable
-						forceTranscodeV2 = true;
 					}
 				}
 
