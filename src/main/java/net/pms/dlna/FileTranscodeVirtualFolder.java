@@ -110,7 +110,7 @@ public class FileTranscodeVirtualFolder extends VirtualFolder {
 					renderer = this.getParent().getDefaultRenderer();
 				}
 
-				if (justStreamed.getExt() != null && (justStreamed.getExt().isCompatible(ref.getMedia(), renderer) || justStreamed.isSkipTranscode())) {
+				if (justStreamed.isStreamableV2() || justStreamed.isSkipTranscode()) {
 					justStreamed.setPlayer(null);
 					justStreamed.setMedia(ref.getMedia());
 					justStreamed.setNoName(true);
