@@ -471,8 +471,6 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 				}
 				addChildInternal(child);
 
-				// This is parserV2 transcodable
-				setStreamableV2(false);
 				boolean parserV2 = child.getMedia() != null && getDefaultRenderer() != null && getDefaultRenderer().isMediaParserV2();
 				if (parserV2) {
 					// We already have useful info, just need to layout folders
@@ -480,12 +478,12 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 					if (mimeType != null) {
 						// This is parserV2 streamable
 						child.getMedia().setMimeType(mimeType.equals(FormatConfiguration.MIMETYPE_AUTO) ? child.getMedia().getMimeType() : mimeType);
-						setStreamableV2(true);
+						child.setStreamableV2(true);
 					}
 				}
 
 				if (child.getExt() != null) {
-					setSkipTranscode(child.getExt().skip(PMS.getConfiguration().getNoTranscode(), getDefaultRenderer() != null ? getDefaultRenderer().getStreamedExtensions() : null));
+					child.setSkipTranscode(child.getExt().skip(PMS.getConfiguration().getNoTranscode(), getDefaultRenderer() != null ? getDefaultRenderer().getStreamedExtensions() : null));
 				}
 
 				if (child.getExt() != null && (child.getExt().transcodable() || parserV2) && (child.getMedia() == null || parserV2)) {
@@ -557,7 +555,7 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 						// or 2- ForceTranscode extension forced by user
 						// or 3- FFmpeg support and the file is not ps3 compatible (need to remove this ?) and no SkipTranscode extension forced by user
 						// or 4- There's some sub files or embedded subs to deal with and no SkipTranscode extension forced by user
-						if (forceTranscode || !isSkipTranscode() && (!isStreamableV2() || isIncompatible || hasSubsToTranscode)) {
+						if (forceTranscode || !child.isSkipTranscode() && (!child.isStreamableV2() || isIncompatible || hasSubsToTranscode)) {
 						    child.setPlayer(pl);
 						    LOGGER.trace("Switching " + child.getName() + " to player " + pl.toString() + " for transcoding");
 						}
