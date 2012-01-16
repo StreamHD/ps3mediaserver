@@ -2108,30 +2108,29 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 	}
 	
 	/**
-	 * @deprecated Use standard getter and setter to access this variable.
+	 * Use standard getter and setter to access this variable.
 	 */
-	@Deprecated
-	protected boolean isStreamableV2 = false;
+	private boolean isStreamableV2 = false;
 	
 	/**
-	 * Returns true if this resource's media info can be handled natively by
-	 * the default renderer.
+	 * Returns true if this resource's media info can be handled
+	 * natively by the default renderer.
 	 * 
-	 * @return True if the media can be streamed to the default renderer, false
-	 *  otherwise.
-	 * @since 1.51
+	 * @return True if the media can be streamed to the default
+	 * renderer, false otherwise.
+	 * @since 1.50.1
 	 */
 	protected boolean isStreamableV2() {
 		return isStreamableV2;
 	}
 	
 	/**
-	 * Set to true if this resource's media info can be handled natively by
-	 * the default renderer.
+	 * Set to true if this resource's media info can be handled
+	 * natively by the default renderer.
 	 * 
-	 * @param isStreamableV2 Set to true if the media can be streamed to the
-	 * default renderer, false otherwise.
-	 * @since 1.51
+	 * @param isStreamableV2 Set to true if the media can be streamed
+	 * to the default renderer, false otherwise.
+	 * @since 1.50.1
 	 */
 	protected void setStreamableV2(boolean isStreamableV2) {
 		this.isStreamableV2 = isStreamableV2;
