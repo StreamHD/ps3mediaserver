@@ -526,6 +526,16 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 						}
 					}
 
+					boolean isIncompatible = false;
+					// FIXME: Remove PS3 specific logic to support other renderers
+					if (child.getExt() != null && child.getExt() instanceof net.pms.formats.WEB) {
+						if (!child.getExt().isCompatible(child.getMedia(),getDefaultRenderer())) {
+							isIncompatible = true;
+						}
+					} else {
+						isIncompatible = !child.isSkipTranscode() && !child.isStreamableV2();
+					}
+					
 					if (pl != null && !allChildrenAreFolders) {
 						boolean forceTranscode = false;
 						if (child.getExt() != null) {
@@ -544,18 +554,12 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 						    hasSubsToTranscode = (PMS.getConfiguration().getUseSubtitles() && child.isSrtFile()) || hasEmbeddedSubs;
 						}
 
-						boolean isIncompatible = false;
-						// FIXME: Remove PS3 specific logic to support other renderers
-						if (!child.getExt().isCompatible(child.getMedia(),getDefaultRenderer())) {
-							isIncompatible = true;
-						}
-
 						// Force transcoding if
 						// 1- MediaInfo support detected the file was not matched with supported codec configs and no SkipTranscode extension forced by user
 						// or 2- ForceTranscode extension forced by user
 						// or 3- FFmpeg support and the file is not ps3 compatible (need to remove this ?) and no SkipTranscode extension forced by user
 						// or 4- There's some sub files or embedded subs to deal with and no SkipTranscode extension forced by user
-						if (forceTranscode || !child.isSkipTranscode() && (!child.isStreamableV2() || isIncompatible || hasSubsToTranscode)) {
+						if (forceTranscode || !child.isSkipTranscode() && (isIncompatible || hasSubsToTranscode)) {
 						    child.setPlayer(pl);
 						    LOGGER.trace("Switching " + child.getName() + " to player " + pl.toString() + " for transcoding");
 						}
@@ -586,7 +590,7 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 								}
 							}
 						}
-					} else if (!child.getExt().isCompatible(child.getMedia(),getDefaultRenderer()) && !child.isFolder()) {
+					} else if (isIncompatible && !child.isFolder()) {
 						// FIXME: Remove PS3 specific logic to support other renderers
 						getChildren().remove(child);
 					}
