@@ -252,6 +252,11 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 	protected long lastRefreshTime;
 
 	/**
+	 * Use standard getter and setter to access this variable.
+	 */
+	private boolean StreamExternalSubs = false;
+
+	/**
 	 * Returns parent object, usually a folder type of resource. In the DLDI
 	 * queries, the UPNP server needs to give out the parent container where
 	 * the item is. The <i>parent</i> represents such a container.
@@ -2102,6 +2107,25 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 	 */
 	protected void setLastRefreshTime(long lastRefreshTime) {
 		this.lastRefreshTime = lastRefreshTime;
+	}
+
+	/**
+	 * @return true if this resource has subtitles in a file
+	 * which need to be streamed, false otherwise.
+	 * @since 1.50.1
+	 */
+	public boolean StreamExternalSubs() {
+		return StreamExternalSubs;
+	}
+
+	/**
+	 * @param StreamExternalSubs set true if this resource has
+	 * subtitles in a file which need to be streamed, false
+	 * otherwise.
+	 * @since 1.50.1
+	 */
+	protected void setStreamExternalSubs(boolean StreamExternalSubs) {
+		this.StreamExternalSubs = StreamExternalSubs;
 	}
 }
 
