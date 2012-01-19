@@ -540,16 +540,20 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 							forceTranscode = child.getExt().skip(PMS.getConfiguration().getForceTranscode(), getDefaultRenderer() != null ? getDefaultRenderer().getTranscodedExtensions() : null);
 						}
 
-						boolean hasEmbeddedSubs = false;
-						if (child.getMedia() != null) {
-							for (DLNAMediaSubtitle s : child.getMedia().getSubtitlesCodes()) {
-								hasEmbeddedSubs |= s.getSubType().equals("Embedded");
-							}
-						}
-
 						boolean hasSubsToTranscode = false;
 						if (!PMS.getConfiguration().isMencoderDisableSubs()) {
-						    hasSubsToTranscode = (PMS.getConfiguration().getUseSubtitles() && child.isSrtFile()) || hasEmbeddedSubs;
+							// Favour streaming over transcoding if there are subs that can be streamed.
+							if (PMS.getConfiguration().getUseSubtitles() && child.getMedia().getSubtitlesCodes().hasExternalSubsToHandle()
+									|| child.getMedia().getSubtitlesCodes().hasEmbeddedSubsToHandle()) {
+								hasSubsToTranscode = true;
+							}
+							if (child.getMedia().getSubtitlesCodes().hasStreamableEmbeddedSubs(getDefaultRenderer())) {
+								hasSubsToTranscode = false;
+							}
+							if (PMS.getConfiguration().getUseSubtitles() && child.getMedia().getSubtitlesCodes().hasStreamableExternalSubs(getDefaultRenderer())) {
+								hasSubsToTranscode = false;
+								child.setStreamExternalSubs(true);
+							}
 						}
 
 						boolean isIncompatible = false;
@@ -564,6 +568,13 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 						// or 3- FFmpeg support and the file is not ps3 compatible (need to remove this ?) and no SkipTranscode extension forced by user
 						// or 4- There's some sub files or embedded subs to deal with and no SkipTranscode extension forced by user
 						if (forceTranscode || !isSkipTranscode() && (forceTranscodeV2 || isIncompatible || hasSubsToTranscode)) {
+
+							if (PMS.getConfiguration().getUseSubtitles() && child.getMedia().getSubtitlesCodes().hasSkipTranscodeSubs(getDefaultRenderer())) {
+								child.setStreamExternalSubs(true);
+							} else {
+								child.setStreamExternalSubs(false);
+							}
+
 						    child.setPlayer(pl);
 						    LOGGER.trace("Switching " + child.getName() + " to player " + pl.toString() + " for transcoding");
 						}

@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.JComponent;
 
+import net.pms.PMS;
 import net.pms.configuration.PmsConfiguration;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.dlna.DLNAMediaAudio;
@@ -183,6 +184,14 @@ public abstract class Player {
 
 		if (params.aid != null) {
 			currentLang = params.aid.getLang();
+		}
+
+		// The media contains external subtitles which should be streamed directly to the
+		// renderer. Do not transcode them.
+		if (PMS.getConfiguration().getUseSubtitles() && media != null && params.mediaRenderer != null && media.getSubtitlesCodes().hasSkipTranscodeSubs(params.mediaRenderer)) {
+			logger.trace("Stream subtitles to: " + params.mediaRenderer.getRendererName());
+			params.sid = null;
+			return;
 		}
 
 		if (params.sid != null && params.sid.getId() == -1) {

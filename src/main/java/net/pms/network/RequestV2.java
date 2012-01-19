@@ -31,6 +31,7 @@ import net.pms.PMS;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.dlna.DLNAMediaInfo;
 import net.pms.dlna.DLNAMediaSubtitle;
+import net.pms.dlna.DLNAMediaSubtitleList;
 import net.pms.dlna.DLNAResource;
 import net.pms.dlna.Range;
 import net.pms.external.StartStopListenerDelegate;
@@ -315,9 +316,9 @@ public class RequestV2 extends HTTPResource {
 					// Some renderers (like Samsung devices) allow a custom header for a subtitle URL
 					String subtitleHttpHeader = mediaRenderer.getSubtitleHttpHeader();
 					
-					if (subtitleHttpHeader != null && !"".equals(subtitleHttpHeader)) {
+					if (subtitleHttpHeader != null && !"".equals(subtitleHttpHeader) && dlna.StreamExternalSubs()) {
 						// Device allows a custom subtitle HTTP header; construct it
-						List<DLNAMediaSubtitle> subs = dlna.getMedia().getSubtitlesCodes();
+						DLNAMediaSubtitleList subs = dlna.getMedia().getSubtitlesCodes();
 
 						if (subs != null && !subs.isEmpty()) {
 							DLNAMediaSubtitle sub = subs.get(0);
