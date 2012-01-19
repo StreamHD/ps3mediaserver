@@ -70,6 +70,7 @@ public class FileTranscodeVirtualFolder extends VirtualFolder {
 					newChildNoSub.setMediaAudio(ref.getMedia().getAudioCodes().get(i));
 					newChildNoSub.setMediaSubtitle(new DLNAMediaSubtitle());
 					newChildNoSub.getMediaSubtitle().setId(-1);
+					newChildNoSub.setStreamExternalSubs(false);
 					addChildInternal(newChildNoSub);
 
 					addChapterFile(newChildNoSub);
@@ -80,7 +81,13 @@ public class FileTranscodeVirtualFolder extends VirtualFolder {
 						newChild.setMedia(ref.getMedia());
 						newChild.setNoName(true);
 						newChild.setMediaAudio(ref.getMedia().getAudioCodes().get(i));
-						newChild.setMediaSubtitle(ref.getMedia().getSubtitlesCodes().get(j));
+						DLNAMediaSubtitle sub = ref.getMedia().getSubtitlesCodes().get(j);
+						newChild.setMediaSubtitle(sub);
+						if (this.getParent().getDefaultRenderer() != null && this.getParent().getDefaultRenderer().isSubSkipTranscode(sub.getType())) {
+							newChild.setStreamExternalSubs(true);
+						} else {
+							newChild.setStreamExternalSubs(false);
+						}
 						addChildInternal(newChild);
 						addChapterFile(newChild);
 
@@ -95,9 +102,9 @@ public class FileTranscodeVirtualFolder extends VirtualFolder {
 						newChildNoSub.setMedia(ref.getMedia());
 						newChildNoSub.setNoName(true);
 						newChildNoSub.setMediaAudio(ref.getMedia().getAudioCodes().get(i));
+						newChildNoSub.setStreamExternalSubs(false);
 						addChildInternal(newChildNoSub);
 						addChapterFile(newChildNoSub);
-
 					}
 				}
 				// meskibob: I think it'd be a good idea to add a "Stream" option (for PS3 compatible containers) to the #Transcode# folder in addition to the current options already in there.
