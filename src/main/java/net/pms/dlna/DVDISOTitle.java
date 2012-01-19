@@ -87,7 +87,7 @@ public class DVDISOTitle extends DLNAResource {
 		String width = null;
 		String height = null;
 		ArrayList<DLNAMediaAudio> audio = new ArrayList<DLNAMediaAudio>();
-		ArrayList<DLNAMediaSubtitle> subs = new ArrayList<DLNAMediaSubtitle>();
+		DLNAMediaSubtitleList subs = new DLNAMediaSubtitleList();
 		if (lines != null) {
 			for (String line : lines) {
 				if (line.startsWith("DVD start=")) {

@@ -155,7 +155,7 @@ public class DLNAMediaInfo implements Cloneable {
 	 * @deprecated Use standard getter and setter to access this variable.
 	 */
 	@Deprecated
-	public ArrayList<DLNAMediaSubtitle> subtitlesCodes = new ArrayList<DLNAMediaSubtitle>();
+	public DLNAMediaSubtitleList subtitlesCodes = new DLNAMediaSubtitleList();
 
 	/**
 	 * @deprecated Use standard getter and setter to access this variable.
@@ -1279,7 +1279,7 @@ public class DLNAMediaInfo implements Cloneable {
 			for (DLNAMediaAudio audio : getAudioCodes()) {
 				mediaCloned.getAudioCodes().add((DLNAMediaAudio) audio.clone());
 			}
-			mediaCloned.setSubtitlesCodes(new ArrayList<DLNAMediaSubtitle>());
+			mediaCloned.setSubtitlesCodes(new DLNAMediaSubtitleList());
 			for (DLNAMediaSubtitle sub : getSubtitlesCodes()) {
 				mediaCloned.getSubtitlesCodes().add((DLNAMediaSubtitle) sub.clone());
 			}
@@ -1468,7 +1468,7 @@ public class DLNAMediaInfo implements Cloneable {
 	 * @return the subtitlesCodes
 	 * @since 1.50
 	 */
-	public ArrayList<DLNAMediaSubtitle> getSubtitlesCodes() {
+	public DLNAMediaSubtitleList getSubtitlesCodes() {
 		return subtitlesCodes;
 	}
 
@@ -1476,7 +1476,7 @@ public class DLNAMediaInfo implements Cloneable {
 	 * @param subtitlesCodes the subtitlesCodes to set
 	 * @since 1.50
 	 */
-	public void setSubtitlesCodes(ArrayList<DLNAMediaSubtitle> subtitlesCodes) {
+	public void setSubtitlesCodes(DLNAMediaSubtitleList subtitlesCodes) {
 		this.subtitlesCodes = subtitlesCodes;
 	}
 
