@@ -188,7 +188,7 @@ public abstract class Player {
 
 		// The media contains external subtitles which should be streamed directly to the
 		// renderer. Do not transcode them.
-		if (PMS.getConfiguration().getUseSubtitles() && media != null && params.mediaRenderer != null && media.getSubtitlesCodes().hasSkipTranscodeSubs(params.mediaRenderer)) {
+		if (PMS.getConfiguration().getUseSubtitles() && params.forceSkipTranscodeSubs) {
 			logger.trace("Stream subtitles to: " + params.mediaRenderer.getRendererName());
 			params.sid = null;
 			return;

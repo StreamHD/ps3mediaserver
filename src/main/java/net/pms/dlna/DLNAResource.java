@@ -1553,6 +1553,7 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 			params.timeseek = timeRange.getStartOrZero();
 			params.timeend = timeRange.getEndOrZero();
 			params.shift_scr = timeseek_auto;
+			params.forceSkipTranscodeSubs = this.StreamExternalSubs();
 
 			if (this instanceof IPushOutput) {
 				params.stdin = (IPushOutput) this;
