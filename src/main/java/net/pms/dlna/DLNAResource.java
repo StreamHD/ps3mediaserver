@@ -1803,7 +1803,7 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 	 * @return The subtitle object containing detailed information.
 	 * @since 1.50
 	 */
-	protected DLNAMediaSubtitle getMediaSubtitle() {
+	public DLNAMediaSubtitle getMediaSubtitle() {
 		return media_subtitle;
 	}
 

@@ -292,7 +292,12 @@ public class RequestV2 extends HTTPResource {
 
 					if (subs != null && !subs.isEmpty()) {
 						// TODO: maybe loop subs to get the requested subtitle type instead of using the first one
-						DLNAMediaSubtitle sub = subs.get(0);
+						DLNAMediaSubtitle sub;
+						if (dlna.getMediaSubtitle() != null && mediaRenderer.isSubSupported(dlna.getMediaSubtitle().getType())) {
+							sub = dlna.getMediaSubtitle();
+						} else {
+							sub = subs.get(0);
+						}
 						inputStream = new java.io.FileInputStream(sub.getFile());
 					}
 				} else {
@@ -321,7 +326,12 @@ public class RequestV2 extends HTTPResource {
 						DLNAMediaSubtitleList subs = dlna.getMedia().getSubtitlesCodes();
 
 						if (subs != null && !subs.isEmpty()) {
-							DLNAMediaSubtitle sub = subs.get(0);
+							DLNAMediaSubtitle sub;
+							if (dlna.getMediaSubtitle() != null && mediaRenderer.isSubSupported(dlna.getMediaSubtitle().getType())) {
+								sub = dlna.getMediaSubtitle();
+							} else {
+								sub = subs.get(0);
+							}
 
 							int type = sub.getType();
 
