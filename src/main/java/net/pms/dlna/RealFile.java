@@ -55,7 +55,10 @@ public class RealFile extends MapFile {
 		File file = this.getFile();
 		checktype();
 		if (getType() == Format.VIDEO && file.exists() && PMS.getConfiguration().getUseSubtitles() && file.getName().length() > 4) {
-			setSrtFile(FileUtil.doesSubtitlesExists(file, null));
+			if (this.getMedia() == null ) {
+				this.setMedia(new DLNAMediaInfo());
+			}
+			setSrtFile(FileUtil.doesSubtitlesExists(file, this.getMedia(), false));
 		}
 		boolean valid = file.exists() && (getExt() != null || file.isDirectory());
 

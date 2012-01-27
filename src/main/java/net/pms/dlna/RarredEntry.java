@@ -85,7 +85,10 @@ public class RarredEntry extends DLNAResource implements IPushOutput {
 	@Override
 	public boolean isValid() {
 		checktype();
-		setSrtFile(FileUtil.doesSubtitlesExists(pere, null));
+		if (this.getMedia() == null ) {
+			this.setMedia(new DLNAMediaInfo());
+		}
+		setSrtFile(FileUtil.doesSubtitlesExists(pere, this.getMedia(), false));
 		return getExt() != null;
 	}
 

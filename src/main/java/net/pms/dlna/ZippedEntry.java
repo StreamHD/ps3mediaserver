@@ -84,7 +84,10 @@ public class ZippedEntry extends DLNAResource implements IPushOutput {
 	@Override
 	public boolean isValid() {
 		checktype();
-		setSrtFile(FileUtil.doesSubtitlesExists(z, null));
+		if (this.getMedia() == null ) {
+			this.setMedia(new DLNAMediaInfo());
+		}
+		setSrtFile(FileUtil.doesSubtitlesExists(z, this.getMedia(), false));
 		return getExt() != null;
 	}
 

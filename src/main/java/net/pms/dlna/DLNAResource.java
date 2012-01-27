@@ -494,8 +494,8 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 					setSkipTranscode(child.getExt().skip(PMS.getConfiguration().getNoTranscode(), getDefaultRenderer() != null ? getDefaultRenderer().getStreamedExtensions() : null));
 				}
 
-				if (child.getExt() != null && (child.getExt().transcodable() || parserV2) && (child.getMedia() == null || parserV2)) {
-					if (!parserV2) {
+				if (child.getExt() != null && (child.getExt().transcodable() || parserV2)) {
+					if (!parserV2 && child.getMedia() == null) {
 						child.setMedia(new DLNAMediaInfo());
 					}
 
