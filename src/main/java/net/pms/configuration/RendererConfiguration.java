@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import net.pms.Messages;
 import net.pms.PMS;
 import net.pms.dlna.DLNAMediaInfo;
+import net.pms.dlna.DLNAMediaSubtitle;
 import net.pms.dlna.MediaInfoParser;
 import net.pms.dlna.RootFolder;
 import net.pms.formats.Format;
@@ -275,6 +276,8 @@ public class RendererConfiguration {
 	private static final String DLNA_TREE_HACK = "CreateDLNATreeFaster";
 	private static final String CHUNKED_TRANSFER = "ChunkedTransfer";
 	private static final String SUBTITLE_HTTP_HEADER = "SubtitleHttpHeader";
+	private static final String SUPPORTED_SUBTITLE_FORMATS = "SupportedSubtitleFormats";
+	private static final String SKIP_TRANSCODE_SUBTITLE_FORMATS = "SkipTranscodeSubtitleFormats";
 
 	// Sony devices require JPG thumbnails
 	private static final String FORCE_JPG_THUMBNAILS = "ForceJPGThumbnails";
@@ -773,6 +776,144 @@ public class RendererConfiguration {
 	 */
 	public String getSubtitleHttpHeader() {
 		return getString(SUBTITLE_HTTP_HEADER, "");
+	}
+
+	/**
+	 * Some devices have native support for varying subtitle formats. This method
+	 * will retrieve list of subtitle formats supported by the renderer.
+	 * 
+	 * @return List of natively-supported subtitle formats
+	 */
+	public String getSupportedSubtitleFormats() {
+		return getString(SUPPORTED_SUBTITLE_FORMATS, "");
+	}
+
+	/**
+	 * In some cases, it might be preferred to override transcoded subtitles and
+	 * stream the subtitles directly to the renderer. This method will retrieve
+	 * the list of subtitle formats for which such behaviour is preferred.
+	 *
+	 * @return List of "skip transcode" subtitle formats
+	 */
+	public String getSkipTranscodeSubtitleFormats() {
+		return getString(SKIP_TRANSCODE_SUBTITLE_FORMATS, "");
+	}
+
+	/**
+	 * This method will check if the renderer has native support for a specific
+	 * subtitle type.
+	 *
+	 * @param SubType The subtitle type
+	 * @return True if the subtitle type is natively supported by the renderer,
+	 * false otherwise
+	 */
+	public boolean isSubSupported(int SubType) {
+		StringTokenizer st = new StringTokenizer(getSupportedSubtitleFormats(), ",");
+
+		while (st.hasMoreTokens()) {
+			String ext = st.nextToken().trim();
+
+			switch(SubType) {
+			case DLNAMediaSubtitle.SUBRIP:
+				if (ext.equals("srt")) {
+					return true;
+				}
+				break;
+
+			case DLNAMediaSubtitle.TEXT:
+				if (ext.equals("txt")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.MICRODVD:
+				if (ext.equals("sub")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.SAMI:
+				if (ext.equals("smi")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.ASS:
+				if (ext.equals("ass")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.VOBSUB:
+				if (ext.equals("idx")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.EMBEDDED:
+				if (ext.equals("embedded")) {
+					return true;
+					}
+				break;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This method will check if the renderer should override transcoded subtitles,
+	 * in favour of streaming, for a specific subtitle type.
+	 *
+	 * @param SubType The subtitle type
+	 * @return True if this subtitle type should be streamed when video is being
+	 * transcoded. Embedded subtitles are not supported and will always return false.
+	 */
+	public boolean isSubSkipTranscode(int SubType) {
+		StringTokenizer st = new StringTokenizer(getSkipTranscodeSubtitleFormats(), ",");
+
+		while (st.hasMoreTokens()) {
+			String ext = st.nextToken().trim();
+
+			switch(SubType) {
+			case DLNAMediaSubtitle.SUBRIP:
+				if (ext.equals("srt")) {
+					return true;
+				}
+				break;
+
+			case DLNAMediaSubtitle.TEXT:
+				if (ext.equals("txt")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.MICRODVD:
+				if (ext.equals("sub")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.SAMI:
+				if (ext.equals("smi")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.ASS:
+				if (ext.equals("ass")) {
+					return true;
+					}
+				break;
+
+			case DLNAMediaSubtitle.VOBSUB:
+				if (ext.equals("idx")) {
+					return true;
+					}
+				break;
+
+			}
+		}
+		return false;
 	}
 
 	private int getInt(String key, int def) {
